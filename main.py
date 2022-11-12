@@ -89,6 +89,7 @@ def main(genomas, config):  # fitness function
         idx_cano = 0
         if len(passaros) > 0:
             # Verifica se deve usar o primeiro ou o segundo cano
+            # Possivel PROBLEMA AQUI!
             if len(canos) > 1 and passaros[0].x > canos[0].x + canos[0].CANO_CIMA.get_width():
                 idx_cano = 1
         else:
@@ -98,15 +99,16 @@ def main(genomas, config):  # fitness function
         # Recompensando cada pássaro com fitness de 0,1 para cada frame que ele permanecer vivo
         for i, passaro in enumerate(passaros):
             passaro.mover()
-            lista_genomas[i].fitness += 0.1
+            if ia_jogando:
+                lista_genomas[i].fitness += 0.1
 
-            # Envia a localização do pássaro, a localização do cano superior e a localização do cano inferior e determine a partir da rede se deve pular ou não
-            output = redes[i].activate((passaro.y, abs(passaro.y - canos[idx_cano].altura),
-                                        abs(passaro.y - canos[idx_cano].pos_base)))
+                # Envia a localização do pássaro, a localização do cano superior e a localização do cano inferior e determine a partir da rede se deve pular ou não
+                output = redes[i].activate((passaro.y, abs(passaro.y - canos[idx_cano].altura),
+                                            abs(passaro.y - canos[idx_cano].pos_base)))
 
-            # Usamos uma função de ativação TANH para que o resultado fique entre -1 e 1. se mais de 0,5 então pula
-            if output[0] > 0.5:
-                passaro.pular()
+                # Usamos uma função de ativação TANH para que o resultado fique entre -1 e 1. se mais de 0,5 então pula
+                if output[0] > 0.5:
+                    passaro.pular()
 
         chao.mover()
 
@@ -148,10 +150,10 @@ def main(genomas, config):  # fitness function
 
         desenhar_tela(tela, passaros, canos, chao, pontos)
 
-        # termina e salva o resultado apos pontuação definida
-        if pontos > 20:
-            pickle.dump(redes[0], open("best.pickle", "wb"))
-            break
+        # # termina e salva o resultado apos pontuação definida
+        # if pontos > 20:
+        #     pickle.dump(redes[0], open("best.pickle", "wb"))
+        #     break
 
 
 def rodar(caminho_config):
@@ -167,7 +169,7 @@ def rodar(caminho_config):
     populacao.add_reporter(neat.StatisticsReporter())
 
     if ia_jogando:
-        ganhador = populacao.run(main, 50)
+        ganhador = populacao.run(main)
         # Melhor individuo ao final das 50 gerações
         print('\nMelhor individuo:\n{!s}'.format(ganhador))
     else:

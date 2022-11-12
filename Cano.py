@@ -11,6 +11,10 @@ class Cano:
     def __init__(self, x) -> None:
         self.x = x
         self.altura = 0
+        self.teste = 0
+        self.subida = True
+        self.descida = False
+        self.max = 0
 
         # Posições do canos
         self.pos_top = 0
@@ -31,6 +35,21 @@ class Cano:
         self.x -= self.VELOCIDADE
 
     def desenhar(self, tela):
+        velocidade = 3
+        if self.subida:
+            self.pos_top -= velocidade
+            self.pos_base -= velocidade
+            if (self.pos_top + self.CANO_CIMA.get_height()) <= 100:
+                self.subida = False
+                self.descida = True
+
+        if self.descida:
+            self.pos_top += velocidade
+            self.pos_base += velocidade
+            if self.pos_base >= 600:
+                self.subida = True
+                self.descida = False
+
         # Desenha o cano superior
         tela.blit(self.CANO_CIMA, (self.x, self.pos_top))
         # Desenha o cano inferior

@@ -23,7 +23,7 @@ Para jogar o jogo, cada indivíduo (pássaro) possui sua própria rede neural co
 ```
 
 <center></center>
-<img src="imgs/demo/inputs.png" alt="drawing"/, width = 250px, height = 400px>
+<img src="imgs/demo/inputs.png" alt="drawing"/, height = 400px>
     
 2. a camada oculta, que pode aumentar ou diminuir aleátoriomente de acordo com necessidade do NEAT.
 

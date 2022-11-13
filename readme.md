@@ -3,11 +3,10 @@
 As seguintes dependências são necessárias para a execução do jogo:
 
 1. pygame
-2. pickle
-3. Python3.9+
-4. neat-python
-5. matplotlib
-6. graphviz
+2. Python3.9+
+3. neat-python
+4. matplotlib
+5. graphviz
 
 Para instalar as dependências, faça `pip3 install -r requirements.txt`
 
@@ -15,12 +14,20 @@ Para instalar as dependências, faça `pip3 install -r requirements.txt`
 
 Para jogar o jogo, cada indivíduo (pássaro) possui sua própria rede neural composta pelas próximas 2 camadas:
 
-1.
+1. uma camada de entrada com 3 neurônios representando o que um pássaro vê
 
 ```
- 1. Altura do pássaro
- 2.
+ 1) distância horizontal entre o pássaro e o cano
+ 2) distância vertical entre o pássaro e o cano superior
+ 3) distância vertical entre o pássaro e o cano inferior.
 ```
+
+<center></center>
+<img src="imgs/demo/inputs.png" alt="drawing"/, width = 250px, height = 400px>
+    
+2. a camada oculta, que pode aumentar ou diminuir aleátoriomente de acordo com necessidade do NEAT.
+
+3. Uma saída
 
 # referencias
 

@@ -29,8 +29,9 @@ class Cano:
         self.definir_altura()
 
     def definir_altura(self):
+        # intervalo está entre 50 e 450 para surgimento do cano
         self.altura = random.randrange(50, 450)
-        self.pos_top = self.altura - self.CANO_CIMA.get_height()
+        self.pos_top = self.altura - self.ALTURA
         self.pos_base = self.altura + self.DISTANCIA
 
     def mover(self):
@@ -42,7 +43,7 @@ class Cano:
             if self.subida:
                 self.pos_top -= velocidade
                 self.pos_base -= velocidade
-                if (self.pos_top + self.CANO_CIMA.get_height()) <= 100:
+                if (self.pos_top + self.ALTURA) <= 100:
                     self.subida = False
                     self.descida = True
 

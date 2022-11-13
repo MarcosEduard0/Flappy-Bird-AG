@@ -22,8 +22,8 @@ def plot_stats(statistics, ylog=False, view=False, filename='avg_fitness.svg'):
     plt.plot(generation, avg_fitness + stdev_fitness, 'g-.', label="+1 sd")
     plt.plot(generation, best_fitness, 'r-', label="best")
 
-    plt.title("Population's average and best fitness")
-    plt.xlabel("Generations")
+    plt.title("Média e melhor aptidão da população")
+    plt.xlabel("Gerações")
     plt.ylabel("Fitness")
     plt.grid()
     plt.legend(loc="best")
@@ -47,8 +47,8 @@ def plot_spikes(spikes, view=False, filename=None, title=None):
 
     fig = plt.figure()
     plt.subplot(4, 1, 1)
-    plt.ylabel("Potential (mv)")
-    plt.xlabel("Time (in ms)")
+    plt.ylabel("Potencial (mv)")
+    plt.xlabel("Tempo (in ms)")
     plt.grid()
     plt.plot(t_values, v_values, "g-")
 
@@ -59,19 +59,19 @@ def plot_spikes(spikes, view=False, filename=None, title=None):
 
     plt.subplot(4, 1, 2)
     plt.ylabel("Fired")
-    plt.xlabel("Time (in ms)")
+    plt.xlabel("Tempo (in ms)")
     plt.grid()
     plt.plot(t_values, f_values, "r-")
 
     plt.subplot(4, 1, 3)
     plt.ylabel("Recovery (u)")
-    plt.xlabel("Time (in ms)")
+    plt.xlabel("Tempo (in ms)")
     plt.grid()
     plt.plot(t_values, u_values, "r-")
 
     plt.subplot(4, 1, 4)
     plt.ylabel("Current (I)")
-    plt.xlabel("Time (in ms)")
+    plt.xlabel("Tempo (in ms)")
     plt.grid()
     plt.plot(t_values, I_values, "r-o")
 
@@ -100,9 +100,9 @@ def plot_species(statistics, view=False, filename='speciation.svg'):
     fig, ax = plt.subplots()
     ax.stackplot(range(num_generations), *curves)
 
-    plt.title("Speciation")
-    plt.ylabel("Size per Species")
-    plt.xlabel("Generations")
+    plt.title("Especiação")
+    plt.ylabel("Tamanho por espécie")
+    plt.xlabel("Gerações")
 
     plt.savefig(filename)
 

@@ -7,7 +7,6 @@ from Chao import Chao
 import pickle
 import neat
 
-ia_jogando = True
 geracao = 0
 
 # configuração da tela do jogo
@@ -25,7 +24,7 @@ FONTE_PONTOS = pygame.font.SysFont('arial', 30)
 
 # opção de configuração do jogo
 FPS = 30  # velocidade de atualização das imagens
-max_score = 100  # pontuação maxima para finalizar o jogo
+max_score = 35  # pontuação maxima para finalizar o jogo
 
 # Opções do NEAT
 geracao = 0  # começamos na geração 0
@@ -114,7 +113,7 @@ def main(genomas, config):  # fitness function
     start_time = pygame.time.get_ticks()
 
     run = True
-    while run and len(passaros):
+    while run:
         # verifica os eventos do programa
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -253,5 +252,4 @@ def rodar_IA(caminho_config):
     print('\nMelhor individuo:\n{!s}'.format(ganhador))
 
 
-if __name__ == '__main__':
-    rodar_IA('config.txt')
+rodar_IA('config.txt')

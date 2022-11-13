@@ -14,7 +14,7 @@ Para instalar as dependências, faça `pip3 install -r requirements.txt`
 
 Para jogar o jogo, cada indivíduo (pássaro) possui sua própria rede neural composta pelas próximas 2 camadas:
 
-1. uma camada de entrada com 3 neurônios representando o que um pássaro vê
+1. Uma camada de entrada com 3 neurônios representando o que um pássaro vê
 
 ```
  1) distância horizontal entre o pássaro e o cano
@@ -25,12 +25,18 @@ Para jogar o jogo, cada indivíduo (pássaro) possui sua própria rede neural co
 <center>
 <img src="imgs/demo/inputs.png" alt="drawing"/, height = 400px>
 </center>
-2. a camada oculta, que pode aumentar ou diminuir aleátoriomente de acordo com necessidade do NEAT.
 
-3. Uma saída
+2. A camada oculta, que pode aumentar ou diminuir aleátoriomente de acordo com necessidade do NEAT.
+
+3. Uma camada de saída com 1 neurônio usado para fornecer uma ação da seguinte forma:
+
+```
+if saída > 0.8 then pula else não faz nada
+```
 
 # referencias
 
 - https://neat-python.readthedocs.io/en/latest/
 - https://www.youtube.com/watch?v=MMxFDaIOHsE&ab_channel=TechWithTim
 - https://www.youtube.com/watch?v=GMDb2jtzKZQ&t=1514s&ab_channel=HashtagPrograma%C3%A7%C3%A3o
+- https://medium.com/analytics-vidhya/how-i-built-an-ai-to-play-flappy-bird-81b672b66521

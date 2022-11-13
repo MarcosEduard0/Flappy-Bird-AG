@@ -22,9 +22,9 @@ Para jogar o jogo, cada indivíduo (pássaro) possui sua própria rede neural co
  3) distância vertical entre o pássaro e o cano inferior.
 ```
 
-<center></center>
+<center>
 <img src="imgs/demo/inputs.png" alt="drawing"/, height = 400px>
-    
+</center>
 2. a camada oculta, que pode aumentar ou diminuir aleátoriomente de acordo com necessidade do NEAT.
 
 3. Uma saída

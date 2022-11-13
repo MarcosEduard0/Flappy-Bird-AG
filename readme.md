@@ -1,3 +1,27 @@
+# Machine Learning for Flappy Bird usando Rede Neural e Algotmo Genético
+
+As seguintes dependências são necessárias para a execução do jogo:
+
+1. pygame
+2. pickle
+3. Python3.9+
+4. neat-python
+5. matplotlib
+6. graphviz
+
+Para instalar as dependências, faça `pip3 install -r requirements.txt`
+
+## Arquitetura da Rede Neural
+
+Para jogar o jogo, cada indivíduo (pássaro) possui sua própria rede neural composta pelas próximas 2 camadas:
+
+1.
+
+```
+ 1. Altura do pássaro
+ 2.
+```
+
 # referencias
 
 - https://neat-python.readthedocs.io/en/latest/

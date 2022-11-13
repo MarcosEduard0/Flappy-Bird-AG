@@ -1,3 +1,5 @@
+from __future__ import print_function
+from visualize import *
 import pygame
 from Passaro import Passaro
 from Cano import Cano
@@ -8,16 +10,44 @@ import neat
 ia_jogando = True
 geracao = 0
 
+# configuração da tela do jogo
 TELA_LARGURA = 500
 TELA_ALTURA = 800
-IMAGEM_FUNDO = pygame.transform.scale2x(pygame.image.load('imgs/bg.png'))
+TELA = pygame.display.set_mode((TELA_LARGURA, TELA_ALTURA))
+# definindo o titulo da janela
+pygame.display.set_caption("Flappy Bird - UFRJ")
 
+# carregando imagem de fundo
+IMAGEM_FUNDO = pygame.transform.scale2x(pygame.image.load('imgs/bg.png'))
+# configurando a fonte do jogo
 pygame.font.init()
 FONTE_PONTOS = pygame.font.SysFont('arial', 30)
 
+# opção de configuração do jogo
+FPS = 30  # velocidade de atualização das imagens
+max_score = 100  # pontuação maxima para finalizar o jogo
 
-def desenhar_tela(tela, passaros, canos, chao, pontos):
-    tela.blit(IMAGEM_FUNDO, (0, 0))
+# Opções do NEAT
+geracao = 0  # começamos na geração 0
+MAX_GEN = 50  # numero máximo de gerações
+recomp_passar_cano = 5  # recompensa para o idividuo q passou corretamento pelo cano
+recomp_vivo = 0.1  # recompensar por permaneser vivo
+prob_pular = 0.5  # limiar de probabilidade para o passaro pular
+penalidade = 1  # penalidade por colidir com o cano
+
+
+def get_index(canos, passaros):
+    # pegando a posição X dos passaros
+    passaro_x = passaros[0].x
+    # calcule a delta x entre os pássaros e cada cano
+    list_distance = [cano.x + cano.LARGURA - passaro_x for cano in canos]
+    # pegando o índice do cano que tem a distância mínima não negativa (o cano mais próximo na frente do pássaro)
+    index = list_distance.index(min(i for i in list_distance if i >= 0))
+    return index
+
+
+def desenhar_tela(tela, passaros, canos, chao, pontos, tempo):
+    tela.blit(IMAGEM_FUNDO, (0, 0))  # desenhando plano de fundo do jogo
 
     # Desenhando os passaros
     for passaro in passaros:
@@ -28,153 +58,200 @@ def desenhar_tela(tela, passaros, canos, chao, pontos):
         cano.desenhar(tela)
 
     # Pontuação
-    texto = FONTE_PONTOS.render(f"Pontos: {pontos}", 1, (255, 255, 255))
+    texto = FONTE_PONTOS.render(f"Pontuação: {pontos}", 1, (255, 255, 255))
     tela.blit(texto, (TELA_LARGURA-10 - texto.get_width(), 10))
 
-    if ia_jogando:
-        # Gerações
-        texto = FONTE_PONTOS.render(f"Geração: {geracao}", 1, (255, 255, 255))
-        tela.blit(texto, (10, 10))
-        # Quant. Vivos
-        texto = FONTE_PONTOS.render(
-            f"Vivos: {len(passaros)}", 1, (255, 255, 255))
-        tela.blit(texto, (10, 40))
+    # Gerações
+    texto = FONTE_PONTOS.render(f"Geração: {geracao}", 1, (255, 255, 255))
+    tela.blit(texto, (10, 10))
+    # Quant. Vivos
+    texto = FONTE_PONTOS.render(
+        f"Vivos: {len(passaros)}", 1, (255, 255, 255))
+    tela.blit(texto, (10, 40))
 
+    # tempo decorrido da população
+    texto = FONTE_PONTOS.render(
+        'Tempo: ' + str(tempo) + ' s', 1, (255, 255, 255))
+    tela.blit(texto, (TELA_LARGURA-10 - texto.get_width(), 40))
+
+    # desenhando o chao
     chao.desenhar(tela)
+
+    # atualizando tela
     pygame.display.update()
 
 
 def main(genomas, config):  # fitness function
-    global geracao
-    geracao += 1
+    global geracao, TELA
+    tela = TELA
+    geracao += 1  # atualizando geração
 
     # Criando a rede neural
-    if ia_jogando:
-        redes = []
-        lista_genomas = []
-        passaros = []
-        for _, genoma in genomas:
-            rede = neat.nn.FeedForwardNetwork.create(genoma, config)
-            redes.append(rede)
-            genoma.fitness = 0
-            lista_genomas.append(genoma)
-            passaros.append(Passaro(230, 350))
-    else:
-        passaros = [Passaro(230, 350)]
+    redes = []  # lista para armazenar todas as redes neurais de treinamento
+    lista_genomas = []  # lista para armazenar todos os genomas de treinamento
+    passaros = []  # lista para armazenar todos os passaros de treinamento
+
+    for _, genoma in genomas:
+        # configurando a rede neural para cada genoma usando a configuração que definimos
+        rede = neat.nn.FeedForwardNetwork.create(genoma, config)
+        redes.append(rede)  # adicionando a rede neural a lista
+        # adicionando o genoma a lista
+        lista_genomas.append(genoma)
+        genoma.fitness = 0  # iniciando fitness zerada
+        # criando passaro e adcionando a lista
+        passaros.append(Passaro(230, 350))
 
     # Instanciando chão e canos
     chao = Chao(730)
     canos = [Cano(700)]
-    tela = pygame.display.set_mode((TELA_LARGURA, TELA_ALTURA))
-    pygame.display.set_caption("Flappy Bird - UFRJ")
+
+    # pontuação do jogo
     pontos = 0
 
+    # tempo do jogo
     relogio = pygame.time.Clock()
+    # atualização do tempo para cada geração
+    start_time = pygame.time.get_ticks()
 
     run = True
     while run and len(passaros):
-        relogio.tick(30)
-
+        # verifica os eventos do programa
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 run = False
+                # pickle.dump(redes[0], open("best.pickle", "wb"))
                 pygame.quit()
 
-            if not ia_jogando:
-                if evento.type == pygame.KEYDOWN:
-                    if evento.key == pygame.K_SPACE:
-                        for passaro in passaros:
-                            passaro.pular()
-
-        idx_cano = 0
-        if len(passaros) > 0:
-            # Verifica se deve usar o primeiro ou o segundo cano
-            # Possivel PROBLEMA AQUI!
-            if len(canos) > 1 and passaros[0].x > canos[0].x + canos[0].CANO_CIMA.get_width():
-                idx_cano = 1
-        else:
+        # finaliza o jogo quando a pontuação exceder a pontuação máxima
+        # finaliza o loop e recomeça quando não nao tem nenhum pássaro
+        if pontos >= max_score or len(passaros) == 0:
             run = False
             break
 
+        # tempo de apredizagem por geração
+        tempo = round((pygame.time.get_ticks() - start_time)/1000, 2)
+
+        relogio.tick(FPS)
+
+        idx_cano = get_index(canos, passaros)
+
+        # idx_cano = 0
+        # if len(passaros) > 0:
+        #     # Verifica se deve usar o primeiro ou o segundo cano
+        #     if len(canos) > 1 and passaros[0].x > canos[0].x + canos[0].LARGURA:
+        #         idx_cano = 1
+        # else:
+        #     run = False
+        #     break
+
         # Recompensando cada pássaro com fitness de 0,1 para cada frame que ele permanecer vivo
         for i, passaro in enumerate(passaros):
+           # recompensando cada pássaro com fitness de 0,1 para cada frame que ele permanecer vivo
             passaro.mover()
-            if ia_jogando:
-                lista_genomas[i].fitness += 0.1
+            lista_genomas[i].fitness += recomp_vivo
 
-                # Envia a localização do pássaro, a localização do cano superior e a localização do cano inferior e determine a partir da rede se deve pular ou não
-                output = redes[i].activate((passaro.y, abs(passaro.y - canos[idx_cano].altura),
-                                            abs(passaro.y - canos[idx_cano].pos_base)))
+            # input 1: distância horizontal entre o pássaro e o cano
+            delta_x = passaro.x - canos[idx_cano].x
+            # delta_x = passaro.y
 
-                # Usamos uma função de ativação TANH para que o resultado fique entre -1 e 1. se mais de 0,5 então pula
-                if output[0] > 0.5:
-                    passaro.pular()
+            # input 2: distância vertical entre o pássaro e o cano superior
+            delta_y_top = passaro.y - canos[idx_cano].altura
+            # delta_y_top = abs(passaro.y - canos[idx_cano].altura)
 
-        chao.mover()
+            # # input 3: distância vertical entre o pássaro e o tubo inferior
+            delta_y_bottom = passaro.y - canos[idx_cano].pos_base
+            # delta_y_bottom = abs(passaro.y - canos[idx_cano].pos_base)
+
+            rede_input = (delta_x, delta_y_top, delta_y_bottom)
+            # enviamos os iputs e obtemos a saída de pular ou não
+            output = redes[i].activate(rede_input)
+
+            # Usamos uma função de ativação TANH para que o resultado fique entre -1 e 1. se mais de 0,5 então pula
+            if output[0] > 0.5:
+                passaro.pular()
+
+        chao.mover()  # mover o chao
 
         add_cano = False
+        # crie uma lista vazia para conter todos os canos a serem removidos
         remover_canos = []
 
         for cano in canos:
             # Verifica colisão
             for i, passaro in enumerate(passaros):
+                # verifique a colisão para cada ave na população
                 if cano.colidir(passaro):
+                    # aplica a penalidade de colidir com um cano
+                    lista_genomas[i].fitness -= penalidade
+                    # remove o passaro da lista
                     passaros.pop(i)
-                    if ia_jogando:
-                        lista_genomas[i].fitness -= 1
-                        lista_genomas.pop(i)
-                        redes.pop(i)
+                    # remove o genoma do passaro
+                    lista_genomas.pop(i)
+                    # remove o modelo do passaro da rede
+                    redes.pop(i)
+                # verifica se o passaro passou corretamente no cano
                 if not cano.passou and passaro.x > cano.x:
                     cano.passou = True
                     add_cano = True
-            cano.mover()
-            if cano.x + cano.CANO_CIMA.get_width() < 0:
+            cano.mover()  # mover o cano
+            # verifica se o cano esta fora da tela para remover
+            if cano.x + cano.LARGURA < 0:
                 remover_canos.append(cano)
 
         if add_cano:
-            pontos += 1
-            canos.append(Cano(600))
-            # Recompensando a rede por ter passado por um cano
-            for genoma in lista_genomas:
-                genoma.fitness += 5
+            pontos += 1  # adiciona um ponto ao placar
+            canos.append(Cano(600))  # cria um novo cano
 
+            # Recompensando os passaros que passam corretamente no cano
+            for genoma in lista_genomas:
+                genoma.fitness += recomp_passar_cano
+
+        # remove os canos que ja sairam da tela
         for cano in remover_canos:
             canos.remove(cano)
 
+        # verifica colisão do passaro com o teto ou o chão
         for i, passaro in enumerate(passaros):
-            if (passaro.y + passaro.imagem.get_height()) > chao.y or passaro.y < 0:
+            if (passaro.y + passaro.ALTURA) > chao.y or passaro.y < 0:
                 passaros.pop(i)
-                if ia_jogando:
-                    lista_genomas.pop(i)
-                    redes.pop(i)
+                lista_genomas.pop(i)
+                redes.pop(i)
 
-        desenhar_tela(tela, passaros, canos, chao, pontos)
-
-        # # termina e salva o resultado apos pontuação definida
-        # if pontos > 20:
-        #     pickle.dump(redes[0], open("best.pickle", "wb"))
-        #     break
+        # desenha a janela do jogo
+        desenhar_tela(tela, passaros, canos, chao, pontos, tempo)
 
 
-def rodar(caminho_config):
-    config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
-                                neat.DefaultSpeciesSet, neat.DefaultStagnation,
+def rodar_IA(caminho_config):
+    config = neat.config.Config(neat.DefaultGenome,
+                                neat.DefaultReproduction,
+                                neat.DefaultSpeciesSet,
+                                neat.DefaultStagnation,
                                 caminho_config)
 
-    # Crie a população, que é o objeto de nível superior para uma execução NEAT.
+    # Criando a população de acordo com as configurações que fizemos
     populacao = neat.Population(config)
 
     # Adicione um relátorio durante o progresso das gerações no terminal.
     populacao.add_reporter(neat.StdOutReporter(True))
-    populacao.add_reporter(neat.StatisticsReporter())
+    status = neat.StatisticsReporter()
+    populacao.add_reporter(status)
 
-    if ia_jogando:
-        ganhador = populacao.run(main)
-        # Melhor individuo ao final das 50 gerações
-        print('\nMelhor individuo:\n{!s}'.format(ganhador))
-    else:
-        main(None, None)
+    # executando a função fitness (principal), o segundo argumento pode ser o numero de gerações maxima
+    populacao.run(main)
+
+    # pegando o genoma mais apto como nosso vencedor
+    ganhador = status.best_genome()
+
+    # visualizando os resultados
+    node_names = {-1: 'delta_x', -2: 'delta_y_top', -
+                  3: 'delta_y_bottom', 0: 'Jump or Not'}
+    draw_net(config, ganhador, True, node_names=node_names)
+    plot_stats(status, ylog=False, view=True)
+    plot_species(status, view=True)
+
+    # Melhor individuo ao final das 50 gerações
+    print('\nMelhor individuo:\n{!s}'.format(ganhador))
 
 
 if __name__ == '__main__':
-    rodar('config.txt')
+    rodar_IA('config.txt')

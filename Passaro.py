@@ -14,6 +14,8 @@ class Passaro:
     ROTAÇÃO_MAXIMA = 25
     VELOCIDADE_ROTACAO = 20
     TEMPO_ANIMACAO = 5
+    LARGURA = IMGS[0].get_width()
+    ALTURA = IMGS[0].get_height()
 
     def __init__(self, x, y) -> None:
         self.x = x

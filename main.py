@@ -7,7 +7,7 @@ from Chao import Chao
 import pickle
 import neat
 
-geracao = 0
+VIZUALICACAO = False
 
 # configuração da tela do jogo
 TELA_LARGURA = 500
@@ -17,14 +17,15 @@ TELA = pygame.display.set_mode((TELA_LARGURA, TELA_ALTURA))
 pygame.display.set_caption("Flappy Bird - UFRJ")
 
 # carregando imagem de fundo
-IMAGEM_FUNDO = pygame.transform.scale2x(pygame.image.load('imgs/bg.png'))
+IMAGEM_FUNDO = pygame.transform.scale2x(pygame.image.load('imgs/bg_night.png'))
 # configurando a fonte do jogo
 pygame.font.init()
 FONTE_PONTOS = pygame.font.SysFont('arial', 30)
 
 # opção de configuração do jogo
 FPS = 30  # velocidade de atualização das imagens
-max_score = 35  # pontuação maxima para finalizar o jogo
+max_score = 20  # pontuação maxima para finalizar o jogo
+geracao = 0
 
 # Opções do NEAT
 geracao = 0  # começamos na geração 0
@@ -45,7 +46,7 @@ def get_index(canos, passaros):
     return index
 
 
-def desenhar_tela(tela, passaros, canos, chao, pontos, tempo):
+def desenhar_tela(tela, passaros, canos, chao, pontos):
     tela.blit(IMAGEM_FUNDO, (0, 0))  # desenhando plano de fundo do jogo
 
     # Desenhando os passaros
@@ -67,11 +68,6 @@ def desenhar_tela(tela, passaros, canos, chao, pontos, tempo):
     texto = FONTE_PONTOS.render(
         f"Vivos: {len(passaros)}", 1, (255, 255, 255))
     tela.blit(texto, (10, 40))
-
-    # tempo decorrido da população
-    texto = FONTE_PONTOS.render(
-        'Tempo: ' + str(tempo) + ' s', 1, (255, 255, 255))
-    tela.blit(texto, (TELA_LARGURA-10 - texto.get_width(), 40))
 
     # desenhando o chao
     chao.desenhar(tela)
@@ -109,8 +105,6 @@ def main(genomas, config):  # fitness function
 
     # tempo do jogo
     relogio = pygame.time.Clock()
-    # atualização do tempo para cada geração
-    start_time = pygame.time.get_ticks()
 
     run = True
     while run:
@@ -126,9 +120,6 @@ def main(genomas, config):  # fitness function
         if pontos >= max_score or len(passaros) == 0:
             run = False
             break
-
-        # tempo de apredizagem por geração
-        tempo = round((pygame.time.get_ticks() - start_time)/1000, 2)
 
         relogio.tick(FPS)
 
@@ -166,7 +157,7 @@ def main(genomas, config):  # fitness function
             output = redes[i].activate(rede_input)
 
             # Usamos uma função de ativação TANH para que o resultado fique entre -1 e 1. se mais de 0,5 então pula
-            if output[0] > 0.5:
+            if output[0] > 0.8:
                 passaro.pular()
 
         chao.mover()  # mover o chao
@@ -217,7 +208,7 @@ def main(genomas, config):  # fitness function
                 redes.pop(i)
 
         # desenha a janela do jogo
-        desenhar_tela(tela, passaros, canos, chao, pontos, tempo)
+        desenhar_tela(tela, passaros, canos, chao, pontos)
 
 
 def rodar_IA(caminho_config):
@@ -242,11 +233,12 @@ def rodar_IA(caminho_config):
     ganhador = status.best_genome()
 
     # visualizando os resultados
-    node_names = {-1: 'delta_x', -2: 'delta_y_top', -
-                  3: 'delta_y_bottom', 0: 'Jump or Not'}
-    draw_net(config, ganhador, True, node_names=node_names)
-    plot_stats(status, ylog=False, view=True)
-    plot_species(status, view=True)
+    if VIZUALICACAO:
+        node_names = {-1: 'delta_x', -2: 'delta_y_supeior', -
+                      3: 'delta_y_inferior', 0: 'Pular ou Não'}
+        draw_net(config, ganhador, True, node_names=node_names)
+        plot_stats(status, ylog=False, view=True)
+        plot_species(status, view=True)
 
     # Melhor individuo ao final das 50 gerações
     print('\nMelhor individuo:\n{!s}'.format(ganhador))

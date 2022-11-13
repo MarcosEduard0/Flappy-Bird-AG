@@ -3,10 +3,8 @@ digraph {
 	delta_x [fillcolor=lightgray shape=box style=filled]
 	delta_y_top [fillcolor=lightgray shape=box style=filled]
 	delta_y_bottom [fillcolor=lightgray shape=box style=filled]
-	-4 [fillcolor=lightgray shape=box style=filled]
 	"Jump or Not" [fillcolor=lightblue style=filled]
-	1 [fillcolor=white style=filled]
-	-4 -> "Jump or Not" [color=green penwidth=0.5365129555731667 style=solid]
-	delta_y_bottom -> 1 [color=red penwidth=0.17268595759586503 style=solid]
-	delta_x -> "Jump or Not" [color=green penwidth=0.20702703709729264 style=solid]
+	delta_x -> "Jump or Not" [color=green penwidth=0.13127172959045155 style=solid]
+	delta_y_top -> "Jump or Not" [color=green penwidth=0.2023233452343874 style=solid]
+	delta_y_bottom -> "Jump or Not" [color=green penwidth=0.2918409459389488 style=solid]
 }

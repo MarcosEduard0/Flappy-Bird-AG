@@ -30,8 +30,11 @@ Para jogar o jogo, cada indivíduo (pássaro) possui sua própria rede neural co
 
 3. Uma camada de saída com 1 neurônio usado para fornecer uma ação da seguinte forma:
 
-```
-if saída > 0.8 then pula else não faz nada
+```python
+if saida > 0.8:
+     pula
+else:
+    não faz nada
 ```
 
 # referencias

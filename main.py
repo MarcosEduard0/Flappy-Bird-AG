@@ -23,9 +23,9 @@ FONTE_PONTOS = pygame.font.SysFont('arial', 30)
 
 # opção de configuração do jogo
 FPS = 30  # velocidade de atualização das imagens
-max_score = 60  # pontuação maxima para finalizar o jogo
+max_score = 20  # pontuação maxima para finalizar o jogo
 geracao = 0
-diff_inc = False
+# diff_inc = False
 
 # Opções do NEAT
 geracao = 0  # começamos na geração 0
@@ -81,9 +81,6 @@ def main(genomas, config):  # fitness function
     tela = TELA
     geracao += 1  # atualizando geração
 
-    #Reseta tempos no recomeço do jogo
-    # Cano.reset_var()
-    # Chao.reset_var()
 
     # Criando a rede neural
     redes = []  # lista para armazenar todas as redes neurais de treinamento
@@ -171,8 +168,8 @@ def main(genomas, config):  # fitness function
                 passaro.pular()
 
         chao.mover()  # mover o chao
-        if diff_inc:
-            chao.acelerar()
+        # if diff_inc:
+        #     chao.acelerar()
 
         add_cano = False
         # crie uma lista vazia para conter todos os canos a serem removidos
@@ -205,8 +202,8 @@ def main(genomas, config):  # fitness function
             new_pipe = Cano(600)
             
             #Acelera a passagem do cano pela tela
-            if diff_inc:
-                new_pipe.acelerar(timestamps)
+            # if diff_inc:
+            #     new_pipe.acelerar(timestamps)
             canos.append(new_pipe)  # cria um novo cano
 
             # Recompensando os passaros que passam corretamente no cano
@@ -262,4 +259,3 @@ def rodar_IA(caminho_config):
 
 
 rodar_IA('config.txt')
-

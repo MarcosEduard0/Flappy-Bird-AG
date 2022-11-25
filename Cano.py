@@ -37,6 +37,13 @@ class Cano:
     def mover(self):
         self.x -= self.VELOCIDADE
 
+    def acelerar(self,timesteps):
+        '''
+        Aumenta a velocidade com que o cano se move a cada chamada
+        '''
+        if self.VELOCIDADE <= 7:
+            self.VELOCIDADE += 0.01*timesteps
+
     def desenhar(self, tela):
         if MOVIMENTAR_CANO:
             velocidade = 2

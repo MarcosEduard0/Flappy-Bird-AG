@@ -7,8 +7,7 @@ from Chao import Chao
 import pickle
 import neat
 
-VIZUALICACAO = False
-
+VIZUALICACAO = True
 # configuração da tela do jogo
 TELA_LARGURA = 500
 TELA_ALTURA = 800
@@ -24,8 +23,9 @@ FONTE_PONTOS = pygame.font.SysFont('arial', 30)
 
 # opção de configuração do jogo
 FPS = 30  # velocidade de atualização das imagens
-max_score = 20  # pontuação maxima para finalizar o jogo
+max_score = 60  # pontuação maxima para finalizar o jogo
 geracao = 0
+diff_inc = False
 
 # Opções do NEAT
 geracao = 0  # começamos na geração 0
@@ -81,6 +81,10 @@ def main(genomas, config):  # fitness function
     tela = TELA
     geracao += 1  # atualizando geração
 
+    #Reseta tempos no recomeço do jogo
+    # Cano.reset_var()
+    # Chao.reset_var()
+
     # Criando a rede neural
     redes = []  # lista para armazenar todas as redes neurais de treinamento
     lista_genomas = []  # lista para armazenar todos os genomas de treinamento
@@ -99,6 +103,7 @@ def main(genomas, config):  # fitness function
     # Instanciando chão e canos
     chao = Chao(730)
     canos = [Cano(700)]
+    
 
     # pontuação do jogo
     pontos = 0
@@ -106,8 +111,10 @@ def main(genomas, config):  # fitness function
     # tempo do jogo
     relogio = pygame.time.Clock()
 
+    timestamps = 0
     run = True
     while run:
+
         # verifica os eventos do programa
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -122,6 +129,9 @@ def main(genomas, config):  # fitness function
             break
 
         relogio.tick(FPS)
+        
+        # Altera aceleração do jogo
+        timestamps += 1
 
         idx_cano = get_index(canos, passaros)
 
@@ -136,7 +146,7 @@ def main(genomas, config):  # fitness function
 
         # Recompensando cada pássaro com fitness de 0,1 para cada frame que ele permanecer vivo
         for i, passaro in enumerate(passaros):
-           # recompensando cada pássaro com fitness de 0,1 para cada frame que ele permanecer vivo
+            # recompensando cada pássaro com fitness de 0,1 para cada frame que ele permanecer vivo
             passaro.mover()
             lista_genomas[i].fitness += recomp_vivo
 
@@ -161,6 +171,8 @@ def main(genomas, config):  # fitness function
                 passaro.pular()
 
         chao.mover()  # mover o chao
+        if diff_inc:
+            chao.acelerar()
 
         add_cano = False
         # crie uma lista vazia para conter todos os canos a serem removidos
@@ -190,7 +202,12 @@ def main(genomas, config):  # fitness function
 
         if add_cano:
             pontos += 1  # adiciona um ponto ao placar
-            canos.append(Cano(600))  # cria um novo cano
+            new_pipe = Cano(600)
+            
+            #Acelera a passagem do cano pela tela
+            if diff_inc:
+                new_pipe.acelerar(timestamps)
+            canos.append(new_pipe)  # cria um novo cano
 
             # Recompensando os passaros que passam corretamente no cano
             for genoma in lista_genomas:
@@ -235,7 +252,7 @@ def rodar_IA(caminho_config):
     # visualizando os resultados
     if VIZUALICACAO:
         node_names = {-1: 'delta_x', -2: 'delta_y_supeior', -
-                      3: 'delta_y_inferior', 0: 'Pular ou Não'}
+                        3: 'delta_y_inferior', 0: 'Pular ou Não'}
         draw_net(config, ganhador, True, node_names=node_names)
         plot_stats(status, ylog=False, view=True)
         plot_species(status, view=True)
@@ -245,3 +262,4 @@ def rodar_IA(caminho_config):
 
 
 rodar_IA('config.txt')
+

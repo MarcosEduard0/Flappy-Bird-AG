@@ -15,6 +15,13 @@ class Chao:
         self.x1 = 0  # posição incial do chao 1
         self.x2 = self.LARGURA  # posicao logos apos o chao 1
 
+    def acelerar(self):
+        '''
+        Aumenta a velocidade com que o chão se move a cada chamada
+        '''
+        if self.VELOCIDADE <= 7:
+            self.VELOCIDADE += 0.01
+
     def mover(self):
         # movendo o chao
         self.x1 -= self.VELOCIDADE

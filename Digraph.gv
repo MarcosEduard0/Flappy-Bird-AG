@@ -1,10 +1,11 @@
 digraph {
 	node [fontsize=9 height=0.2 shape=circle width=0.2]
 	delta_x [fillcolor=lightgray shape=box style=filled]
-	delta_y_top [fillcolor=lightgray shape=box style=filled]
-	delta_y_bottom [fillcolor=lightgray shape=box style=filled]
-	"Jump or Not" [fillcolor=lightblue style=filled]
-	delta_x -> "Jump or Not" [color=green penwidth=0.13127172959045155 style=solid]
-	delta_y_top -> "Jump or Not" [color=green penwidth=0.2023233452343874 style=solid]
-	delta_y_bottom -> "Jump or Not" [color=green penwidth=0.2918409459389488 style=solid]
+	delta_y_supeior [fillcolor=lightgray shape=box style=filled]
+	delta_y_inferior [fillcolor=lightgray shape=box style=filled]
+	"Pular ou Não" [fillcolor=lightblue style=filled]
+	34 [fillcolor=white style=filled]
+	delta_y_supeior -> "Pular ou Não" [color=green penwidth=0.6063439300460751 style=solid]
+	delta_y_inferior -> "Pular ou Não" [color=green penwidth=0.6271502521022765 style=solid]
+	delta_y_inferior -> 34 [color=red penwidth=0.12571357224939222 style=solid]
 }

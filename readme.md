@@ -10,6 +10,7 @@ As seguintes dependências são necessárias para a execução do jogo:
 
 Para instalar as dependências, faça `pip3 install -r requirements.txt`
 
+Para as visualizações de resultados é imprescindivel a instalação dos pacotes Graphviz de acordo com o SO, mais informações podem ser encontradas <a href=https://graphviz.org/download/> aqui </a>: 
 ## Arquitetura da Rede Neural
 
 Para jogar o jogo, cada indivíduo (pássaro) possui sua própria rede neural composta pelas próximas 2 camadas:

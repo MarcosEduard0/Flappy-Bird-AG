@@ -189,7 +189,7 @@ def main(genomas, config):  # fitness function
             pontos += 1  # adiciona um ponto ao placar
             if CENARIO > 2 and aceleracao <= 7:
                 # Acelera a passagem do cano pela tela
-                aceleracao += 0.001*(timestamps/7)
+                aceleracao += 0.001*(timestamps/6)
                 print(aceleracao)
 
             new_pipe = Cano(600, aceleracao)

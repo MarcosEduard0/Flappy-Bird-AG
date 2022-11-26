@@ -2,12 +2,10 @@ import pygame
 import random
 
 IMAGEM_CANO = pygame.transform.scale2x(pygame.image.load('imgs/pipe.png'))
-MOVIMENTAR_CANO = False
 
 
 class Cano:
     DISTANCIA = 200
-    VELOCIDADE = 5
     ALTURA = IMAGEM_CANO.get_height()  # the width of the pipe
     LARGURA = IMAGEM_CANO.get_width()  # the length of the pipe
 
@@ -17,6 +15,7 @@ class Cano:
         self.subida = bool(random.getrandbits(1))
         self.descida = not self.subida
         self.max = 0
+        self.velocidade = 5
 
         # Posições do canos
         self.pos_top = 0
@@ -34,18 +33,10 @@ class Cano:
         self.pos_top = self.altura - self.ALTURA
         self.pos_base = self.altura + self.DISTANCIA
 
-    def mover(self):
-        self.x -= self.VELOCIDADE
-
-    def acelerar(self,timesteps):
-        '''
-        Aumenta a velocidade com que o cano se move a cada chamada
-        '''
-        if self.VELOCIDADE <= 7:
-            self.VELOCIDADE += 0.01*timesteps
-
-    def desenhar(self, tela):
-        if MOVIMENTAR_CANO:
+    def mover(self, cenario):
+        self.x -= self.velocidade
+        # Verifica o cenario atual
+        if cenario > 1:
             velocidade = 2
             if self.subida:
                 self.pos_top -= velocidade
@@ -61,6 +52,15 @@ class Cano:
                     self.subida = True
                     self.descida = False
 
+    def acelerar(self, timesteps):
+        '''
+        Aumenta a velocidade com que o cano se move a cada chamada
+        '''
+        if self.velocidade <= 7:
+            self.velocidade += 0.01*timesteps
+        print(self.velocidade)
+
+    def desenhar(self, tela):
         # Desenha o cano superior
         tela.blit(self.CANO_CIMA, (self.x, self.pos_top))
         # Desenha o cano inferior

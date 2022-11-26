@@ -1,9 +1,0 @@
-digraph {
-	node [fontsize=9 height=0.2 shape=circle width=0.2]
-	delta_x [fillcolor=lightgray shape=box style=filled]
-	delta_y_supeior [fillcolor=lightgray shape=box style=filled]
-	delta_y_inferior [fillcolor=lightgray shape=box style=filled]
-	"Pular ou Não" [fillcolor=lightblue style=filled]
-	delta_y_supeior -> "Pular ou Não" [color=green penwidth=0.7188431143589122 style=solid]
-	delta_y_inferior -> "Pular ou Não" [color=green penwidth=0.7014655441485449 style=solid]
-}

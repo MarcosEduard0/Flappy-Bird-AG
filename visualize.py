@@ -30,7 +30,7 @@ def plot_stats(statistics, ylog=False, view=False, filename='avg_fitness.svg'):
     if ylog:
         plt.gca().set_yscale('symlog')
 
-    plt.savefig(filename)
+    plt.savefig(f'graficos/{filename}')
     if view:
         plt.show()
 
@@ -76,7 +76,7 @@ def plot_spikes(spikes, view=False, filename=None, title=None):
     plt.plot(t_values, I_values, "r-o")
 
     if filename is not None:
-        plt.savefig(filename)
+        plt.savefig(f'graficos/{filename}')
 
     if view:
         plt.show()
@@ -104,7 +104,7 @@ def plot_species(statistics, view=False, filename='speciation.svg'):
     plt.ylabel("Tamanho por espécie")
     plt.xlabel("Gerações")
 
-    plt.savefig(filename)
+    plt.savefig(f'graficos/{filename}')
 
     if view:
         plt.show()
@@ -182,6 +182,6 @@ def draw_net(config, genome, view=False, filename=None, node_names=None, show_di
             dot.edge(a, b, _attributes={
                      'style': style, 'color': color, 'penwidth': width})
 
-    dot.render(filename, view=view)
+    dot.render(f'graficos/{filename}', view=view)
 
     return dot

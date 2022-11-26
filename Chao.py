@@ -19,10 +19,10 @@ class Chao:
         '''
         Aumenta a velocidade com que o chão se move a cada chamada
         '''
-        if self.VELOCIDADE <= 7:
+        if self.VELOCIDADE <= 6:
             self.VELOCIDADE += 0.01
 
-    def mover(self):
+    def mover(self, cenario=1):
         # movendo o chao
         self.x1 -= self.VELOCIDADE
         self.x2 -= self.VELOCIDADE
@@ -32,6 +32,10 @@ class Chao:
             self.x1 = self.x2 + self.LARGURA
         if self.x2 + self.LARGURA < 0:
             self.x2 = self.x1 + self.LARGURA
+
+        # Verifica o cenario atual
+        if cenario > 2:
+            self.acelerar()
 
     def desenhar(self, tela):
         tela.blit(self.IMAGEM, (self.x1, self.y))

@@ -1,4 +1,3 @@
-from __future__ import print_function
 from visualize import *
 import pygame
 from Passaro import Passaro
@@ -6,6 +5,9 @@ from Cano import Cano
 from Chao import Chao
 import pickle
 import neat
+
+# definindo o cenário do jogo
+CENARIO = 3
 
 VIZUALICACAO = True
 # configuração da tela do jogo
@@ -23,9 +25,8 @@ FONTE_PONTOS = pygame.font.SysFont('arial', 30)
 
 # opção de configuração do jogo
 FPS = 30  # velocidade de atualização das imagens
-max_score = 20  # pontuação maxima para finalizar o jogo
+max_score = 35  # pontuação maxima para finalizar o jogo
 geracao = 0
-# diff_inc = False
 
 # Opções do NEAT
 geracao = 0  # começamos na geração 0
@@ -81,7 +82,6 @@ def main(genomas, config):  # fitness function
     tela = TELA
     geracao += 1  # atualizando geração
 
-
     # Criando a rede neural
     redes = []  # lista para armazenar todas as redes neurais de treinamento
     lista_genomas = []  # lista para armazenar todos os genomas de treinamento
@@ -100,7 +100,6 @@ def main(genomas, config):  # fitness function
     # Instanciando chão e canos
     chao = Chao(730)
     canos = [Cano(700)]
-    
 
     # pontuação do jogo
     pontos = 0
@@ -121,25 +120,16 @@ def main(genomas, config):  # fitness function
 
         # finaliza o jogo quando a pontuação exceder a pontuação máxima
         # finaliza o loop e recomeça quando não nao tem nenhum pássaro
-        if pontos >= max_score or len(passaros) == 0:
+        if len(passaros) == 0 or max_score <= pontos:
             run = False
-            break
+            return
 
         relogio.tick(FPS)
-        
+
         # Altera aceleração do jogo
         timestamps += 1
 
         idx_cano = get_index(canos, passaros)
-
-        # idx_cano = 0
-        # if len(passaros) > 0:
-        #     # Verifica se deve usar o primeiro ou o segundo cano
-        #     if len(canos) > 1 and passaros[0].x > canos[0].x + canos[0].LARGURA:
-        #         idx_cano = 1
-        # else:
-        #     run = False
-        #     break
 
         # Recompensando cada pássaro com fitness de 0,1 para cada frame que ele permanecer vivo
         for i, passaro in enumerate(passaros):
@@ -148,8 +138,7 @@ def main(genomas, config):  # fitness function
             lista_genomas[i].fitness += recomp_vivo
 
             # input 1: distância horizontal entre o pássaro e o cano
-            delta_x = passaro.x - canos[idx_cano].x
-            # delta_x = passaro.y
+            altura_passaro = passaro.y
 
             # input 2: distância vertical entre o pássaro e o cano superior
             delta_y_top = passaro.y - canos[idx_cano].altura
@@ -159,17 +148,15 @@ def main(genomas, config):  # fitness function
             delta_y_bottom = passaro.y - canos[idx_cano].pos_base
             # delta_y_bottom = abs(passaro.y - canos[idx_cano].pos_base)
 
-            rede_input = (delta_x, delta_y_top, delta_y_bottom)
+            rede_input = (altura_passaro, delta_y_top, delta_y_bottom)
             # enviamos os iputs e obtemos a saída de pular ou não
             output = redes[i].activate(rede_input)
 
-            # Usamos uma função de ativação TANH para que o resultado fique entre -1 e 1. se mais de 0,5 então pula
-            if output[0] > 0.8:
+            # Usamos uma função de ativação TANH para que o resultado fique entre -1 e 1. se mais de 0,7 então pula
+            if output[0] > 0.7:
                 passaro.pular()
 
-        chao.mover()  # mover o chao
-        # if diff_inc:
-        #     chao.acelerar()
+        chao.mover(CENARIO)  # mover o chao
 
         add_cano = False
         # crie uma lista vazia para conter todos os canos a serem removidos
@@ -192,7 +179,7 @@ def main(genomas, config):  # fitness function
                 if not cano.passou and passaro.x > cano.x:
                     cano.passou = True
                     add_cano = True
-            cano.mover()  # mover o cano
+            cano.mover(CENARIO)  # mover o cano
             # verifica se o cano esta fora da tela para remover
             if cano.x + cano.LARGURA < 0:
                 remover_canos.append(cano)
@@ -200,10 +187,11 @@ def main(genomas, config):  # fitness function
         if add_cano:
             pontos += 1  # adiciona um ponto ao placar
             new_pipe = Cano(600)
-            
-            #Acelera a passagem do cano pela tela
-            # if diff_inc:
-            #     new_pipe.acelerar(timestamps)
+
+            # Acelera a passagem do cano pela tela
+            if CENARIO > 2:
+                new_pipe.acelerar(timestamps)
+
             canos.append(new_pipe)  # cria um novo cano
 
             # Recompensando os passaros que passam corretamente no cano
@@ -248,11 +236,14 @@ def rodar_IA(caminho_config):
 
     # visualizando os resultados
     if VIZUALICACAO:
-        node_names = {-1: 'delta_x', -2: 'delta_y_supeior', -
-                        3: 'delta_y_inferior', 0: 'Pular ou Não'}
-        draw_net(config, ganhador, True, node_names=node_names)
-        plot_stats(status, ylog=False, view=True)
-        plot_species(status, view=True)
+        node_names = {-1: 'altura_passaro', -2: 'delta_y_supeior', -
+                      3: 'delta_y_inferior', 0: 'Pular ou Não'}
+        draw_net(config, ganhador, True, node_names=node_names,
+                 filename=f'redeNeural_cenario{CENARIO}')
+        plot_stats(status, ylog=False, view=True,
+                   filename=f'avg_fitness_cenario{CENARIO}')
+        plot_species(status, view=True,
+                     filename=f'speciationf_cenario{CENARIO}')
 
     # Melhor individuo ao final das 50 gerações
     print('\nMelhor individuo:\n{!s}'.format(ganhador))

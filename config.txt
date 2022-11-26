@@ -1,7 +1,7 @@
 [NEAT]
 fitness_criterion     = max
 fitness_threshold     = 400
-pop_size              = 30
+pop_size              = 15
 reset_on_extinction   = False
 
 [DefaultGenome]
@@ -75,5 +75,5 @@ max_stagnation       = 20
 species_elitism      = 2
 
 [DefaultReproduction]
-elitism            = 2
-survival_threshold = 0.4
+elitism            = 3
+survival_threshold = 0.3

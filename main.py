@@ -121,7 +121,7 @@ def main(genomas, config):  # fitness function
 
         # finaliza o jogo quando a pontuação exceder a pontuação máxima
         # finaliza o loop e recomeça quando não nao tem nenhum pássaro
-        if len(passaros) == 0 or max_score <= pontos:
+        if len(passaros) == 0:
             run = False
             return
 

@@ -1,0 +1,13 @@
+digraph {
+	node [fontsize=9 height=0.2 shape=circle width=0.2]
+	altura_passaro [fillcolor=lightgray shape=box style=filled]
+	delta_y_supeior [fillcolor=lightgray shape=box style=filled]
+	delta_y_inferior [fillcolor=lightgray shape=box style=filled]
+	"Pular ou Não" [fillcolor=lightblue style=filled]
+	38 [fillcolor=white style=filled]
+	delta_y_supeior -> "Pular ou Não" [color=green penwidth=0.5278644593875104 style=dotted]
+	delta_y_inferior -> "Pular ou Não" [color=green penwidth=0.5647333730734186 style=solid]
+	altura_passaro -> "Pular ou Não" [color=green penwidth=0.19991600625642575 style=solid]
+	delta_y_supeior -> 38 [color=red penwidth=0.1572573139632954 style=solid]
+	38 -> "Pular ou Não" [color=green penwidth=0.4837251520096021 style=solid]
+}

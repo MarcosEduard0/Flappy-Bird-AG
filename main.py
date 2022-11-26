@@ -109,6 +109,7 @@ def main(genomas, config):  # fitness function
 
     timestamps = 0
     run = True
+    aceleracao = 5
     while run:
 
         # verifica os eventos do programa
@@ -186,12 +187,12 @@ def main(genomas, config):  # fitness function
 
         if add_cano:
             pontos += 1  # adiciona um ponto ao placar
-            new_pipe = Cano(600)
+            if CENARIO > 2 and aceleracao <= 7:
+                # Acelera a passagem do cano pela tela
+                aceleracao += 0.001*(timestamps/7)
+                print(aceleracao)
 
-            # Acelera a passagem do cano pela tela
-            if CENARIO > 2:
-                new_pipe.acelerar(timestamps)
-
+            new_pipe = Cano(600, aceleracao)
             canos.append(new_pipe)  # cria um novo cano
 
             # Recompensando os passaros que passam corretamente no cano

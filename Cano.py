@@ -9,13 +9,13 @@ class Cano:
     ALTURA = IMAGEM_CANO.get_height()  # the width of the pipe
     LARGURA = IMAGEM_CANO.get_width()  # the length of the pipe
 
-    def __init__(self, x) -> None:
+    def __init__(self, x, velocidade=5) -> None:
         self.x = x
         self.altura = 0
         self.subida = bool(random.getrandbits(1))
         self.descida = not self.subida
         self.max = 0
-        self.velocidade = 5
+        self.velocidade = velocidade
 
         # Posições do canos
         self.pos_top = 0

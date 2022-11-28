@@ -153,7 +153,7 @@ def main(genomas, config):  # fitness function
             # enviamos os iputs e obtemos a saída de pular ou não
             output = redes[i].activate(rede_input)
 
-            # Usamos uma função de ativação TANH para que o resultado fique entre -1 e 1. se mais de 0,7 então pula
+            # Usamos uma função de ativação TANH para que o resultado fique entre -1 e 1. se mais de 0.7 então pula
             if output[0] > 0.7:
                 passaro.pular()
 
@@ -239,7 +239,7 @@ def rodar_IA(caminho_config):
         node_names = {-1: 'altura_passaro', -2: 'delta_y_supeior', -
                       3: 'delta_y_inferior', 0: 'Pular ou Não'}
         draw_net(config, ganhador, True, node_names=node_names,
-                 filename=f'redeNeural_cenario{CENARIO}')
+                 filename=f'topologia_cenario{CENARIO}')
         plot_stats(status, ylog=False, view=True,
                    filename=f'avg_fitness_cenario{CENARIO}')
         plot_species(status, view=True,

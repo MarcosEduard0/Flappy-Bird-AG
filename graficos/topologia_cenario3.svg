@@ -21,10 +21,10 @@
 <text text-anchor="middle" x="79.5" y="-43.05" font-family="Times New Roman,serif" font-size="9.00">Pular ou Não</text>
 </g>
 <!-- altura_passaro&#45;&gt;Pular ou Não -->
-<g id="edge1" class="edge">
+<g id="edge2" class="edge">
 <title>altura_passaro&#45;&gt;Pular ou Não</title>
-<path fill="none" stroke="green" stroke-width="0.18" d="M38.81,-126.05C42.67,-118.48 48.66,-106.73 54.87,-94.55"/>
-<polygon fill="green" stroke="green" stroke-width="0.18" points="57.85,-96.41 59.28,-85.91 51.62,-93.23 57.85,-96.41"/>
+<path fill="none" stroke="green" stroke-width="0.26" d="M38.81,-126.05C42.64,-118.55 48.55,-106.96 54.69,-94.91"/>
+<polygon fill="green" stroke="green" stroke-width="0.26" points="57.8,-96.52 59.22,-86.02 51.56,-93.34 57.8,-96.52"/>
 </g>
 <!-- delta_y_supeior -->
 <g id="node2" class="node">
@@ -39,10 +39,10 @@
 <text text-anchor="middle" x="124.5" y="-133.31" font-family="Times New Roman,serif" font-size="9.00">delta_y_inferior</text>
 </g>
 <!-- delta_y_inferior&#45;&gt;Pular ou Não -->
-<g id="edge2" class="edge">
+<g id="edge1" class="edge">
 <title>delta_y_inferior&#45;&gt;Pular ou Não</title>
-<path fill="none" stroke="green" stroke-width="0.48" d="M120.19,-126.05C116.36,-118.55 110.45,-106.96 104.31,-94.91"/>
-<polygon fill="green" stroke="green" stroke-width="0.48" points="107.58,-93.63 99.92,-86.31 101.35,-96.81 107.58,-93.63"/>
+<path fill="none" stroke="green" stroke-width="0.81" d="M120.19,-126.05C116.44,-118.7 110.68,-107.41 104.67,-95.62"/>
+<polygon fill="green" stroke="green" stroke-width="0.81" points="107.81,-94.08 100.15,-86.76 101.58,-97.26 107.81,-94.08"/>
 </g>
 </g>
 </svg>

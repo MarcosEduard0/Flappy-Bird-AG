@@ -10,7 +10,8 @@ As seguintes dependências são necessárias para a execução do jogo:
 
 Para instalar as dependências, faça `pip3 install -r requirements.txt`
 
-Para as visualizações de resultados é imprescindivel a instalação dos pacotes Graphviz de acordo com o SO, mais informações podem ser encontradas <a href=https://graphviz.org/download/> aqui </a>: 
+Para as visualizações de resultados é imprescindivel a instalação dos pacotes Graphviz de acordo com o SO, mais informações podem ser encontradas <a href=https://graphviz.org/download/> aqui </a>:
+
 ## Arquitetura da Rede Neural
 
 Para jogar o jogo, cada indivíduo (pássaro) possui sua própria rede neural composta pelas próximas 2 camadas:
@@ -18,7 +19,7 @@ Para jogar o jogo, cada indivíduo (pássaro) possui sua própria rede neural co
 1. Uma camada de entrada com 3 neurônios representando o que um pássaro vê
 
 ```
- 1) distância horizontal entre o pássaro e o cano
+ 1) distância vertical entre o pássaro e o chão
  2) distância vertical entre o pássaro e o cano superior
  3) distância vertical entre o pássaro e o cano inferior.
 ```
@@ -32,8 +33,8 @@ Para jogar o jogo, cada indivíduo (pássaro) possui sua própria rede neural co
 3. Uma camada de saída com 1 neurônio usado para fornecer uma ação da seguinte forma:
 
 ```python
-if saida > 0.8:
-     pula
+if out > 0.7:
+     passaro.pular()
 else:
     não faz nada
 ```

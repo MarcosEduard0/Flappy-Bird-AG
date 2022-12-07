@@ -56,7 +56,7 @@ class Cano:
         '''
         Aumenta a velocidade com que o cano se move a cada chamada
         '''
-        if self.velocidade <= 7:
+        if self.velocidade <= 9:
             self.velocidade += 0.01*timesteps
         print(self.velocidade)
 

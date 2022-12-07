@@ -7,8 +7,10 @@ import pickle
 import neat
 
 # definindo o cenário do jogo
-CENARIO = 3
-
+CENARIO = 1
+# definindo carregando de melhor agente
+MELHOR_AGENTE = False
+# ativar vizualização de graficos
 VIZUALICACAO = True
 # configuração da tela do jogo
 TELA_LARGURA = 500
@@ -78,7 +80,7 @@ def desenhar_tela(tela, passaros, canos, chao, pontos):
 
 
 def main(genomas, config):  # fitness function
-    global geracao, TELA
+    global geracao, TELA, MELHOR_AGENTE
     tela = TELA
     geracao += 1  # atualizando geração
 
@@ -97,6 +99,11 @@ def main(genomas, config):  # fitness function
         # criando passaro e adcionando a lista
         passaros.append(Passaro(230, 350))
 
+    if MELHOR_AGENTE:
+        MELHOR_AGENTE = False
+        with open(f"melhor_{CENARIO}.pickle", "rb") as f:
+            redes[0] = pickle.load(f)
+
     # Instanciando chão e canos
     chao = Chao(730)
     canos = [Cano(700)]
@@ -110,7 +117,7 @@ def main(genomas, config):  # fitness function
     timestamps = 0
     run = True
     aceleracao = 5
-    while run:
+    while run and len(passaros) > 0:
 
         # verifica os eventos do programa
         for evento in pygame.event.get():
@@ -118,12 +125,6 @@ def main(genomas, config):  # fitness function
                 run = False
                 # pickle.dump(redes[0], open("best.pickle", "wb"))
                 pygame.quit()
-
-        # finaliza o jogo quando a pontuação exceder a pontuação máxima
-        # finaliza o loop e recomeça quando não nao tem nenhum pássaro
-        if len(passaros) == 0:
-            run = False
-            return
 
         relogio.tick(FPS)
 
@@ -154,7 +155,7 @@ def main(genomas, config):  # fitness function
             output = redes[i].activate(rede_input)
 
             # Usamos uma função de ativação TANH para que o resultado fique entre -1 e 1. se mais de 0.7 então pula
-            if output[0] > 0.7:
+            if output[0] > prob_pular:
                 passaro.pular()
 
         chao.mover(CENARIO)  # mover o chao
@@ -187,9 +188,9 @@ def main(genomas, config):  # fitness function
 
         if add_cano:
             pontos += 1  # adiciona um ponto ao placar
-            if CENARIO > 2 and aceleracao <= 6.5:
+            if CENARIO > 2 and aceleracao <= 10.0:
                 # Acelera a passagem do cano pela tela
-                aceleracao += 0.001*(timestamps/5)
+                aceleracao += 0.01*(timestamps/3)
 
             new_pipe = Cano(600, aceleracao)
             canos.append(new_pipe)  # cria um novo cano
@@ -212,6 +213,10 @@ def main(genomas, config):  # fitness function
         # desenha a janela do jogo
         desenhar_tela(tela, passaros, canos, chao, pontos)
 
+        # break if score gets large enough
+        if pontos > 30:
+            pickle.dump(redes[0], open(f"melhor_{CENARIO}.pickle", "wb"))
+
 
 def rodar_IA(caminho_config):
     config = neat.config.Config(neat.DefaultGenome,
@@ -229,10 +234,14 @@ def rodar_IA(caminho_config):
     populacao.add_reporter(status)
 
     # executando a função fitness (principal), o segundo argumento pode ser o numero de gerações maxima
-    populacao.run(main)
+    melhor = populacao.run(main)
 
     # pegando o genoma mais apto como nosso vencedor
     ganhador = status.best_genome()
+
+    # with open(f"melhor_{CENARIO}.pickle", "wb") as f:
+    #     pickle.dump(melhor, f)
+    #     f.close()
 
     # visualizando os resultados
     if VIZUALICACAO:
@@ -249,4 +258,5 @@ def rodar_IA(caminho_config):
     print('\nMelhor individuo:\n{!s}'.format(ganhador))
 
 
-rodar_IA('config.txt')
+if __name__ == '__main__':
+    rodar_IA('config.txt')

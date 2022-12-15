@@ -4,6 +4,6 @@ digraph {
 	delta_y_supeior [fillcolor=lightgray shape=box style=filled]
 	delta_y_inferior [fillcolor=lightgray shape=box style=filled]
 	"Pular ou Não" [fillcolor=lightblue style=filled]
-	altura_passaro -> "Pular ou Não" [color=green penwidth=0.15649525813197557 style=solid]
-	delta_y_inferior -> "Pular ou Não" [color=green penwidth=0.3392420843092057 style=solid]
+	altura_passaro -> "Pular ou Não" [color=green penwidth=0.15945464471831797 style=solid]
+	delta_y_inferior -> "Pular ou Não" [color=green penwidth=0.2547831214190342 style=solid]
 }

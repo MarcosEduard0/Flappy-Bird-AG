@@ -3,13 +3,12 @@ import pygame
 from Passaro import Passaro
 from Cano import Cano
 from Chao import Chao
-import pickle
 import neat
 
 # definindo o cenário do jogo
-CENARIO = 1
-# definindo carregando de melhor agente
-MELHOR_AGENTE = False
+CENARIO = 3
+# definindo o salvamento/carregamento da melhor população
+MELHOR_AGENTE = True
 # ativar vizualização de graficos
 VIZUALICACAO = True
 # configuração da tela do jogo
@@ -79,7 +78,7 @@ def desenhar_tela(tela, passaros, canos, chao, pontos):
     pygame.display.update()
 
 
-def main(genomas, config):  # fitness function
+def flappy_bird(genomas, config):  # fitness function
     global geracao, TELA, MELHOR_AGENTE
     tela = TELA
     geracao += 1  # atualizando geração
@@ -98,11 +97,6 @@ def main(genomas, config):  # fitness function
         genoma.fitness = 0  # iniciando fitness zerada
         # criando passaro e adcionando a lista
         passaros.append(Passaro(230, 350))
-
-    if MELHOR_AGENTE:
-        MELHOR_AGENTE = False
-        with open(f"melhor_{CENARIO}.pickle", "rb") as f:
-            redes[0] = pickle.load(f)
 
     # Instanciando chão e canos
     chao = Chao(730)
@@ -123,7 +117,6 @@ def main(genomas, config):  # fitness function
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 run = False
-                # pickle.dump(redes[0], open("best.pickle", "wb"))
                 pygame.quit()
 
         relogio.tick(FPS)
@@ -213,10 +206,6 @@ def main(genomas, config):  # fitness function
         # desenha a janela do jogo
         desenhar_tela(tela, passaros, canos, chao, pontos)
 
-        # break if score gets large enough
-        if pontos > 30:
-            pickle.dump(redes[0], open(f"melhor_{CENARIO}.pickle", "wb"))
-
 
 def rodar_IA(caminho_config):
     config = neat.config.Config(neat.DefaultGenome,
@@ -233,15 +222,21 @@ def rodar_IA(caminho_config):
     status = neat.StatisticsReporter()
     populacao.add_reporter(status)
 
+    if MELHOR_AGENTE:
+        # Salvando a população
+        populacao.add_reporter(neat.Checkpointer(
+            4, 5, filename_prefix=f'checkpoint/{CENARIO}-neat-checkpoint-'))
+        try:
+            populacao = neat.Checkpointer.restore_checkpoint(
+                f'checkpoint/{CENARIO}-neat-checkpoint')
+        except:
+            print(f"Ainda não existe checkpoint para o cenario {CENARIO}.")
+
     # executando a função fitness (principal), o segundo argumento pode ser o numero de gerações maxima
-    melhor = populacao.run(main)
+    melhor = populacao.run(flappy_bird)
 
     # pegando o genoma mais apto como nosso vencedor
     ganhador = status.best_genome()
-
-    # with open(f"melhor_{CENARIO}.pickle", "wb") as f:
-    #     pickle.dump(melhor, f)
-    #     f.close()
 
     # visualizando os resultados
     if VIZUALICACAO:

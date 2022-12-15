@@ -24,7 +24,7 @@
 <g id="edge1" class="edge">
 <title>altura_passaro&#45;&gt;Pular ou Não</title>
 <path fill="none" stroke="green" stroke-width="0.16" d="M38.81,-126.05C42.67,-118.48 48.66,-106.73 54.87,-94.55"/>
-<polygon fill="green" stroke="green" stroke-width="0.16" points="57.87,-96.38 59.3,-85.88 51.64,-93.2 57.87,-96.38"/>
+<polygon fill="green" stroke="green" stroke-width="0.16" points="57.87,-96.38 59.3,-85.88 51.63,-93.2 57.87,-96.38"/>
 </g>
 <!-- delta_y_supeior -->
 <g id="node2" class="node">
@@ -41,8 +41,8 @@
 <!-- delta_y_inferior&#45;&gt;Pular ou Não -->
 <g id="edge2" class="edge">
 <title>delta_y_inferior&#45;&gt;Pular ou Não</title>
-<path fill="none" stroke="green" stroke-width="0.34" d="M120.19,-126.05C116.36,-118.55 110.45,-106.96 104.31,-94.91"/>
-<polygon fill="green" stroke="green" stroke-width="0.34" points="107.49,-93.44 99.83,-86.12 101.25,-96.62 107.49,-93.44"/>
+<path fill="none" stroke="green" stroke-width="0.25" d="M120.19,-126.05C116.36,-118.55 110.45,-106.96 104.31,-94.91"/>
+<polygon fill="green" stroke="green" stroke-width="0.25" points="107.43,-93.33 99.77,-86.01 101.19,-96.51 107.43,-93.33"/>
 </g>
 </g>
 </svg>

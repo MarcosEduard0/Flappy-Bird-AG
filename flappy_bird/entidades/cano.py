@@ -1,15 +1,16 @@
 import pygame
+from ..configuracao import IMAGENS
 import random
 
-IMAGEM_CANO = pygame.transform.scale2x(pygame.image.load('imgs/pipe.png'))
 
 
 class Cano:
     DISTANCIA = 200
-    ALTURA = IMAGEM_CANO.get_height()  # the width of the pipe
-    LARGURA = IMAGEM_CANO.get_width()  # the length of the pipe
 
     def __init__(self, x, velocidade=5) -> None:
+        imagem_cano = pygame.transform.scale2x(pygame.image.load(str(IMAGENS / "pipe.png")))
+        self.ALTURA = imagem_cano.get_height()
+        self.LARGURA = imagem_cano.get_width()
         self.x = x
         self.altura = 0
         self.subida = bool(random.getrandbits(1))
@@ -21,8 +22,8 @@ class Cano:
         self.pos_top = 0
         self.pos_base = 0
 
-        self.CANO_CIMA = pygame.transform.flip(IMAGEM_CANO, False, True)
-        self.CANO_BASE = IMAGEM_CANO
+        self.CANO_CIMA = pygame.transform.flip(imagem_cano, False, True)
+        self.CANO_BASE = imagem_cano
 
         self.passou = False
         self.definir_altura()

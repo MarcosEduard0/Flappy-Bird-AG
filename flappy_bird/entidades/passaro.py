@@ -1,17 +1,17 @@
 import pygame
+from ..configuracao import IMAGENS
 
 
 class Passaro:
     # atributos
-    IMGS = [pygame.transform.scale2x(pygame.image.load(
-        f'imgs/bird{x}.png')) for x in range(1, 4)]
     ROTAÇÃO_MAXIMA = 25
     VELOCIDADE_ROTACAO = 20
     TEMPO_ANIMACAO = 5
-    LARGURA = IMGS[0].get_width()
-    ALTURA = IMGS[0].get_height()
 
     def __init__(self, x, y) -> None:
+        self.IMGS = [pygame.transform.scale2x(pygame.image.load(str(IMAGENS / f"bird{x}.png"))) for x in range(1, 4)]
+        self.LARGURA = self.IMGS[0].get_width()
+        self.ALTURA = self.IMGS[0].get_height()
         # posição inicial do passaro
         self.x = x
         self.y = y

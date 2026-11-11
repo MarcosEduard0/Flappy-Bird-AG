@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+checkpoints/execucoes/*
+!checkpoints/execucoes/.gitkeep
+resultados/execucoes/

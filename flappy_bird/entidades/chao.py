@@ -1,14 +1,14 @@
 import pygame
+from ..configuracao import IMAGENS
 
-IMAGEM_CHAO = pygame.transform.scale2x(pygame.image.load('imgs/base.png'))
 
 
 class Chao:
     VELOCIDADE = 5
-    LARGURA = IMAGEM_CHAO.get_width()
-    IMAGEM = IMAGEM_CHAO
 
     def __init__(self, y) -> None:
+        self.IMAGEM = pygame.transform.scale2x(pygame.image.load(str(IMAGENS / "base.png")))
+        self.LARGURA = self.IMAGEM.get_width()
         # como a imagem do piso não é grande o suficiente para preencher a tela, precisamos de 2 imagens
         # essas 2 imagens têm posição inicial diferente, mas têm a mesma posição y
         self.y = y
